@@ -1,0 +1,106 @@
+Introduction:
+	What is Machine Learning:
+		-The study of computer programs(algorithms) that can learn by example 
+		-ML algorithms can generalize from existing examples of task
+			-after seeing a training set of labeled images, an image classifier can figure out how tp apply labels accurately to new, previously unseen images
+	
+	
+
+	Machine learning models can learn by example:
+		1. Algorithms learn rules form labelled examples
+		2. A set of labelled examples used for learning is called Training data.
+		3. The learned rules should also be generalize to correctly recognize or predict new examples not in the training set.
+
+	
+	Machine Learning models learn from experience:
+		-Labeled Examples
+		-User feedback
+		-Surrounding environment
+	
+	
+	Recommendation Books: Introduction to Machine Learning with Python (By Andreas C, Muller and Sarah Guido)
+
+
+
+Key Concepts in Machine Learning:
+	Supervised machine learning: learn to predict target values from labelled data	
+		1.Classification(target values are discrete classes)
+		2.Regression(target values are continuous values)
+	
+	Example of explicit and implicit label source(explicit是人工judge的label, Amazon Mechanical Turk和Crowd Flower平台；
+						      implicit是比如说网站上输入一个query然后用户点进去后几分钟没操作，我们就认定这个网站是这个query的label)
+	
+	Unsupervised Machine Learning: find structure in unlabeled data:
+		1. Find groups of similar instances in the data (clustering)
+		2. Finding ususal patterns (outlier detction)	
+
+
+	!!!A Basic Machine Learning Workflow:
+		1. Representation(Choose a feature representation; choose a type pf classifier to use)
+			1.Feature repesentations:
+				Email: a list of words with their frequency count
+				Picture: a matrix of color values(pixels)
+				Sea creatures: A set of attribute values
+		2. Evaluation(Choose what criterion distinguishes good vs. bad classifier)
+		3. Optimization(Choose how to search for the setting/parameters that give the best classifier for this evaluation criterion)
+
+
+
+Python Tools for Machine Learning:
+	scikit-learn: from sklearn.model_selection import train_test_split
+	Scipy library: provide useful scientific computing tools, including statistical distributions and linear algrbra.
+	Numpy: multi-dimension array.
+	Pandas: provide data structure like Dataframe
+	Matplotlib:do plot visulization  
+
+
+An example Machine Learning Problem:
+	x = fruits[['mass,''width','height']]
+	y = fruits  ['fruit_label']
+	X_train,X_test,y_train,y_test = train_test_split(X,y,random_state = 0)
+	
+
+
+!!!!!!!!!!!!
+!!!K-Nearest Neighbors Classification(can be used in regression and classification): 
+KNN is a instance based or memeory based supervised learning, which means work bu memeoring the labeled examples and use them to classify new objects.
+	The K-Nearest Neighbor classifier algorithm:(K代表最近取k个数据，然后少数服从多数)
+		1. Find the most similar instances(call it X_NN) to x_test that are in X_train
+		2. Get the labels y_NN for the instances in X_NN
+		3. Predict the label for x_test by combining the labels y_NN
+	
+	A nearrest neighbor algorithm needs four things specified:
+		1. A distance metric (欧几里得度量或者是闵可夫斯基距离(MinkowskiDistance)p=2的时候)
+		2. How many nearest neighbor to look at? 
+		3. Optional weighting function on the neighbor points
+		4, Method for aggregating the classes of neighbor points（取多数）
+	
+
+
+	Code for use KNN:
+		#Create classifier object
+		from sklearn.neighbors import KNeighborsClassifier
+		knn = KNeighborsClassifier(n_neighbors = 5)
+		
+		#Train the classifier using the training data
+		knn.fit(X_train, y_train)
+
+		#Estimate the accuracy
+		knn.score(X_test, y_test)
+
+		#Use the trained K-NN classifier model to classify new, unseen objects
+		fruit_prediction = knn.predict([[20, 4.3, 5.5]])
+		lookup_fruit_name[fruit_prediction[0]]
+
+		#plot the decision boundaries of the K-NN classifier
+		from adspy_shared_utilities import plot_fruit_knn
+		plot_fruit_knn(X_train, y_train, 5, 'uniform')   # we choose 5 nearest neighbors, 'uniform'不加权重，或者改为distance
+
+
+
+	
+
+
+
+
+	
