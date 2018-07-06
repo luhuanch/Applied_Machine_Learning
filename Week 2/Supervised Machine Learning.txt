@@ -1,0 +1,44 @@
+Supervised Machine Learning:
+
+Introduction to Supervised Machine learning:
+	Review of Important Terms:
+		1.Feature representation
+		2.Data Instances 
+		3.Target Value
+		4.Training and Test sets
+		5.Model/Estimator
+		6.Evaluation method	
+
+	Classification and Regression:
+		1. Both classification and regression take a set of training instances and learn a mapping to a target value
+		2. For Classification, the target value is a discrete class value
+			-Binary 
+			-Multi-class: target value is one of a set of discrete values
+			-Multi-label: there are multiple target value(labels)
+
+	Supervised learning methods:
+		K-nearest neighbors: makes few assumptions about the structure of the data and gives potentially accurate but sometimes
+				     unstatble predictions(sensitive to small changes in the training data)
+		Linear models: makes strong assumptions about the structure of the data and give stable but potentially inaccurate predictions.
+		
+	随着training的classifier越来越细，training set score会越来越高，test set score会逐渐上升到达峰值后会开始降低
+
+
+Overfitting and Underfitting:
+	Generalization, Overfitting and Underfitting:
+		- Generalization ability refers to an algorithm's ability to give acccurate predictions for new, previous unseen data
+		- Overfitting: Models that are too complex for the training data, are said to overfit and are not likely to generalize well to new examples.
+		- Underfitting: Models that are too simple, that don't do well on training data, are said to underfit.	
+
+
+Supervised Learning: Datasets:
+	数据预处理（归一化，标准化，正则化）
+		-标准化：公式为：(X-mean)/std  计算时对每个属性/每列分别进行，使用sklearn.preprocessing.scale()函数，可以直接将给定数据进行标准化。
+		-归一化：除了上述介绍的方法之外，另一种常用的方法是将属性缩放到一个指定的最大和最小值（通常是1-0）之间，这可以通过preprocessing.MinMaxScaler类实现。
+
+			使用这种方法的目的包括：
+
+				1、对于方差非常小的属性可以增强其稳定性。
+
+				2、维持稀疏矩阵中为0的条目。	
+		-正则化：正则化的过程是将每个样本缩放到单位范数（每个样本的范数为1），如果后面要使用如二次型（点积）或者其它核方法计算两个样本之间的相似性这个方法会很有用。	
