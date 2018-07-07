@@ -42,3 +42,104 @@ Supervised Learning: Datasets:
 
 				2、维持稀疏矩阵中为0的条目。	
 		-正则化：正则化的过程是将每个样本缩放到单位范数（每个样本的范数为1），如果后面要使用如二次型（点积）或者其它核方法计算两个样本之间的相似性这个方法会很有用。	
+
+	Refer: https://www.cnblogs.com/charlotte77/p/5622325.html
+
+
+K-Nearest Neighbors: Classification and Regression
+	Regression:
+		from sklearn.neighbors import KNeighborsRegressor
+		X_train, X_test, y_train, y_test = train_test_split(X_R1, y_R1, random_state = 0)
+		knnreg = KNeighborsRegressor(n_neighbors = 5).fit(X_train, y_train)
+
+		print(knnreg.predict(X_test))
+		print('R-squared test score: {:.3f}'
+     			.format(knnreg.score(X_test, y_test)))
+	Classification:
+		from adspy_shared_utilities import plot_two_class_knn
+
+		X_train, X_test, y_train, y_test = train_test_split(X_C2, y_C2,
+                                                   random_state=0)
+
+		plot_two_class_knn(X_train, y_train, 1, 'uniform', X_test, y_test)
+		plot_two_class_knn(X_train, y_train, 3, 'uniform', X_test, y_test)
+		plot_two_class_knn(X_train, y_train, 11, 'uniform', X_test, y_test)
+
+	
+	The r-squre regression score:
+		- Measure how well a prediction model for regression fits the given data 
+		- Then Score is between 0 and 1(越靠近1 model越接近完美)
+		- Also known as 'Coefficient of dertermination'
+	!!!A k-nearest neighbor approach can be a reasonable baseline against what you can compare more sophisticated methods. 
+	if your data is sparse,do not use knn.
+
+
+
+Linear Regression: Least-Square:
+	 Linear Model:		
+		A linear model is a sum of weighted variables that predicts a target output value given an input data instance.  
+		^y = ^w0x0+^b (^w0 slope, ^b y-intercept)
+		
+	Least-squares Linear Regression("Ordinary least-squares"):
+		- Find w and b that minimizes the mean squared error of the model(RSS ): sum((actual value-predict value)^2). 
+		- No parameters to control model complexity.
+
+
+	How are linear regression parameters w,b estimated?
+		- Parameters are estimated from training data
+		- There are many different way to estimate w and b
+		-The learning algorithm finds the parameters that optimize an objective function, typically to minimize some kind 
+		 of loss function of the predicted target values vs. actural target values.
+		 (loss function = a penalty value for incorrect predictions)
+
+	Code: 
+		from sklearn.linear_model import LinearRegression
+		X_train, X_test, y_train, y_test = train_test_split(X_R1, y_R1,
+                                                   random_state = 0)
+		linreg = LinearRegression().fit(X_train, y_train)
+
+		print('linear model coeff (w): {}'
+     			.format(linreg.coef_))
+		print('linear model intercept (b): {:.3f}'
+     			.format(linreg.intercept_))
+		print('R-squared score (training): {:.3f}'
+     			.format(linreg.score(X_train, y_train)))
+		print('R-squared score (test): {:.3f}'
+    			 .format(linreg.score(X_test, y_test)))
+
+
+Linear Regression: Ridge, Lasso, and polynomial Regression:
+	Ridge Regression: 
+		-Use same least-square criterion, but add a penalty for large variations in w parameters(加入了w^2参数的和).
+		-The addition of parameter penalty is called regularization, which prevents overfitting by restricting the model, typically to reduce it complexity.
+		-Higher alpha means more regularization and simpler models.
+
+		Code(need feature processing and normalization):
+			from sklearn.linear_model import Ridge
+			X_train, X_test, y_train, y_test = train_test_split(X_crime, y_crime,
+                                                   random_state = 0)
+			linridge = Ridge(alpha=20.0).fit(X_train, y_train)
+	
+	The need for feature Normalization:
+		-Important for some machine larning methods taht all features are on the same scale(faster convergence in learning)
+		- MinMax scaling: x_new = (x_old-x_MIN)/(x_MAX-x_MIN)
+			Code: 
+				from sklearn.preprocessing import MinMaxScaler
+				scaler = MinMaxScaler()
+				X_train_scaled = scaler.fit_transform(X_train)要先fit.transform(partData),再transform(restData)不然会报错
+				X_test_scaled = scaler.transform(X_test)先scaler training set，再用这个transform test set
+
+	
+
+
+
+
+
+
+	
+	
+
+
+
+
+
