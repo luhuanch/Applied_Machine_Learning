@@ -108,11 +108,16 @@ Linear Regression: Least-Square:
     			 .format(linreg.score(X_test, y_test)))
 
 
-Linear Regression: Ridge, Lasso, and polynomial Regression:
-	Ridge Regression: 
+Linear Regression: Ridge, Lasso, and polynomial Regression(中文讲解链接：https://blog.csdn.net/sinat_26917383/article/details/52092040):
+	第一项L为训练误差Loss function，第二项为正则化项（惩罚项）。第一项是为了最小化训练误差，得到最好的拟合数据，；
+	第二项是为了简化模型，防止过拟合，得到更好的泛化能力。	
+	L1：向量中各元素绝对值的和。作用是产生少量的特征，而其他的特征都是0，常用于特征选择； 
+	L2：向量中各个元素平方之和再开根号。作用是选择较多的特征，使他们都趋近于0；
+	Ridge Regression(L2 penalty): 
 		-Use same least-square criterion, but add a penalty for large variations in w parameters(加入了w^2参数的和).
 		-The addition of parameter penalty is called regularization, which prevents overfitting by restricting the model, typically to reduce it complexity.
 		-Higher alpha means more regularization and simpler models.
+		-Minimize the sum of squares of coefficients entries
 
 		Code(need feature processing and normalization):
 			from sklearn.linear_model import Ridge
@@ -128,12 +133,38 @@ Linear Regression: Ridge, Lasso, and polynomial Regression:
 				scaler = MinMaxScaler()
 				X_train_scaled = scaler.fit_transform(X_train)要先fit.transform(partData),再transform(restData)不然会报错
 				X_test_scaled = scaler.transform(X_test)先scaler training set，再用这个transform test set
+				(用不同的scaler去train 训练和测试数据集，lead to random skew in the data)
 
 	
+	Lasso Regression:(L1 penalty):
+		- Has the effect of setting parameter weights in w to zero for the least influential variables. 
+		  Called sparse solution, a kind of feature selection
+		- Minimize the sum of the absolute value of the coefficients
+		
+	!!!!!!!!!When to use rridge vs lasso regression:
+		- Many small/medium sized effects: use ridge.
+		- Only a few variables with medium/large effect: use lasso. 
+		
+	
+	Polynomial Feature with Linear Regression(can be a curve):
+		- Generate new features consisting of all polynomial combinations of the original two features(x_0, x_1) into x_0*x_1
+		- This is still a weighted linear combination of features, so it is still a linear model, can use least-squares estimition method as well.
+
+		Code:	X_F1_poly = poly.fit_transform(X_F1)
+
+			X_train, X_test, y_train, y_test = train_test_split(X_F1_poly, y_F1,
+                                                   random_state = 0)
+			linreg = LinearRegression().fit(X_train, y_train)
 
 
-
-
+Logistic Regression:
+	- It can be used in the cases where the target value to be predicted is multi class catgorical variable, not just binary.
+	- The logistic function transforms real-valued input to an output number y between 0 and 1, interpreted as the probability the input object belongs to the positive class.
+	- C值越小，正则强度越大
+	Regularization:
+		- L2 regularization is on by default(like ridge)
+		- parameter C control amount of regularization(default 1.0)
+		- As with regularized lineare regression, it can be important to normalized all features so that they are on the same scale. 
 
 
 	
