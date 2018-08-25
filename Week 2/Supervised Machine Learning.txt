@@ -76,7 +76,7 @@ K-Nearest Neighbors: Classification and Regression
 
 
 Linear Regression: Least-Square:
-	 Linear Model:		
+	Linear Model:		
 		A linear model is a sum of weighted variables that predicts a target output value given an input data instance.  
 		^y = ^w0x0+^b (^w0 slope, ^b y-intercept)
 		
@@ -88,7 +88,7 @@ Linear Regression: Least-Square:
 	How are linear regression parameters w,b estimated?
 		- Parameters are estimated from training data
 		- There are many different way to estimate w and b
-		-The learning algorithm finds the parameters that optimize an objective function, typically to minimize some kind 
+		- The learning algorithm finds the parameters that optimize an objective function, typically to minimize some kind 
 		 of loss function of the predicted target values vs. actural target values.
 		 (loss function = a penalty value for incorrect predictions)
 
@@ -109,7 +109,7 @@ Linear Regression: Least-Square:
 
 
 Linear Regression: Ridge, Lasso, and polynomial Regression(中文讲解链接：https://blog.csdn.net/sinat_26917383/article/details/52092040):
-	第一项L为训练误差Loss function，第二项为正则化项（惩罚项）。第一项是为了最小化训练误差，得到最好的拟合数据，；
+	第一项L为训练误差Loss function，第二项为正则化项（惩罚项）越大说明模型越简单。第一项是为了最小化训练误差，得到最好的拟合数据，；
 	第二项是为了简化模型，防止过拟合，得到更好的泛化能力。	
 	L1：向量中各元素绝对值的和。作用是产生少量的特征，而其他的特征都是0，常用于特征选择； 
 	L2：向量中各个元素平方之和再开根号。作用是选择较多的特征，使他们都趋近于0；
@@ -157,7 +157,7 @@ Linear Regression: Ridge, Lasso, and polynomial Regression(中文讲解链接：https:/
 			linreg = LinearRegression().fit(X_train, y_train)
 
 
-Logistic Regression:
+Logistic Regression(用于处理0，1分类的问题，因为正常线性回归无法做到sigmoid的非线性形式分类):
 	- It can be used in the cases where the target value to be predicted is multi class catgorical variable, not just binary.
 	- The logistic function transforms real-valued input to an output number y between 0 and 1, interpreted as the probability the input object belongs to the positive class.
 	- C值越小，正则强度越大
@@ -168,7 +168,121 @@ Logistic Regression:
 
 
 	
+
+Linear Classifiers: Support Vector Machines(Binary Classification双标签): 
+	f(x,w,b) = sign(w·x+b) = w_1*x_1+w_2*x_2
+	Classfier Margin: Defined as the maximum width the decision boundary are can be increased before hitting a nearest data point.
+	The linear classifier with max margin is a linear Support Vector Machine(LSVM).
 	
+	Linear Support Vector Machine:
+		Code:
+			from sklearn.svm import SVC
+			from adspy_shared_utilities import plot_class_regions_for_classifier_subplot
+	
+			X_train, X_test, y_train, y_test = train_test_split(X_C2, y_C2, random_state = 0)	
+
+			fig, subaxes = plt.subplots(1, 1, figsize=(7, 5))
+			this_C = 1.0
+			clf = SVC(kernel = 'linear', C=this_C).fit(X_train, y_train)
+			title = 'Linear SVC, C = {:.3f}'.format(this_C)
+			plot_class_regions_for_classifier_subplot(clf, X_train, y_train, None, None, title, subaxes)
+	
+	
+	Regularization for SVMs: the C parameter:
+		-The strength of regularization is deterrmined by C
+		-Larger values of C: less regularization
+			-fit the training data as well as possible 
+		-Smaller values of C: more regularization
+			-More tolerant of errors on individual data points
+	
+
+	Linear Model pros and cons:
+		Pros: Simple and easy to train; Fast Prediction; Works well with sparse data
+		Cons: For lower - dimensional data, other models may have superior generalizaion performance;
+		      For classfication, data may not be linearly separable. 
+
+
+Multi-Class Classification(多标签):
+	Code: from sklearn.svm import LinearSVC
+
+		X_train, X_test, y_train, y_test = train_test_split(X_fruits_2d, y_fruits_2d, random_state = 0)
+
+		clf = LinearSVC(C=5, random_state = 67).fit(X_train, y_train)
+		print('Coefficients:\n', clf.coef_)
+		print('Intercepts:\n', clf.intercept_)会出现四条linear，因为是四个labels，会apple vs rest fruit; orange vs rest fruit.....
+
+	
+	
+Kernelized Support Vector Machines(Can be used in both regression and classification):
+	- Tansforming the data can make it much easier for linear classifier, set the low-dimension to high-demension. 
+
+	Radial Basis Function Kernel(径向基核函数):
+		Gamma Parameter: kernel width parameter(小对应square distance很长)
+
+		Code：	# The default SVC kernel is radial basis function (RBF)
+			plot_class_regions_for_classifier(SVC().fit(X_train, y_train),
+                                 X_train, y_train, None, None,
+                                 'Support Vector Classifier: RBF kernel')
+	Pros and Cons:
+		Pro: different kernel functions can be specified, or custom kernels can be defined for specific data types.
+		     Works well for both low and high-dimensional data.
+		Cons: Efficiency decrease as training set size increases;
+		      Needs careful normalization of input data and parameter tuning;
+		      No probalility estimates.
+	
+	Model Complexity: 
+		Kernel: type of kernel function to be used(default 'rbf', other include 'polynomial')	
+		Kernel parameters: gamma
+		C: regularization parameter
+		Typically C and gamma are tunned at the same time. 
+
+
+Cross-Validation: 
+	Code: cv_scores = cross_val_score(clf, X, y)
+	Stratified Cross-Validation: stratified folds each contain a proportion of classes that matches the overall dataset. Now, all classes will be fairly represented in the test set. 
+	1).K-fold Cross Validation(记为K-CV)
+	将原始数据分成K组(一般是均分),将每个子集数据分别做一次验证集,其余的K-1组子集数据作为训练集,这样会得到K个模型,
+	用这K个模型最终的验证集的分类准确率的平均数作为此K-CV下分类器的性能指标.K一般大于等于2,实际操作时一般从3开始取,
+	只有在原始数据集合数据量小的时候才会尝试取2.K-CV可以有效的避免过学习以及欠学习状态的发生,最后得到的结果也比较具有说服性.
+	2).Leave-One-Out Cross Validation(记为LOO-CV)
+	如果设原始数据有N个样本,那么LOO-CV就是N-CV,即每个样本单独作为验证集,其余的N-1个样本作为训练集,所以LOO-CV会得到N个模型,
+	用这N个模型最终的验证集的分类准确率的平均数作为此下LOO-CV分类器的性能指标.相比于前面的K-CV,LOO-CV有两个明显的优点:
+		a.每一回合中几乎所有的样本皆用于训练模型,因此最接近原始样本的分布,这样评估所得的结果比较可靠。
+		b.实验过程中没有随机因素会影响实验数据,确保实验过程是可以被复制的。
+	K-fold是把数据分开，leave-one-out是把每个样本分出来。
+
+
+Decision Tree：
+	Code: from sklearn.tree import DecisionTreeClassifier	
+	      clf = DecisionTreeClassifier().fit(X_train, y_train)
+	      plot_decision_tree(clf, iris.feature_names, iris.target_names)(可视化)
+
+	Controlling the Model Complexity of Decision Trees(Prevent Overfitting):
+		pre-pruning(Sklearn only have pre-prunning): 
+			max_depth: number of split points
+			max _leaf:
+			min_sample_leaf: threshold for the minimum # of data instances a leaf can have to avoid further splitting(最后一层的node数，越小说明模型越拟合)
+			max_leaf_nodes: limits total number of leaves in the tree.
+		post-pruning:
+		
+	
+	Feature Importance: 
+		Feature importance of 0 ==> the feature was not used in prediction
+		Feature importance of 1 ==> the feature predicts the target perfectly
+		All feature importances are normalized to sum to 1
+	
+	
+	Decision Tree: Pros and Cons:
+		Pros: Easily visulized and interpreted; 
+		      No feature normalization or scaling needed; 
+                      Work well with dataset using a mixture of feature types.
+		Cons: Even after tunning, decision tree can still overfit; 
+                      Usually need an ensemble of trees for better generralization performance. 
+	
+		
+
+
+
 
 
 

@@ -1,0 +1,53 @@
+Naive Bayes Classifier(Naive的原因是假设features之间没有任何的联系)：
+	- A simple, probabilistic classifier family
+		1. Naive because they assume that features are conditionally independent(not corelated)。
+		2. Highly efficient learning and prediction, but generalization performance may worse than more sophisticated learning methods.
+		
+	
+	Naive Bayes Classifier types:
+		1. Bernoulli: binary features(word presence, absence)多用于文本分类
+		2. Multinomial: discrete features(word counts) 多用于文档分类时间模型
+		3. Gaussian: continuous/ real-valued features 
+			
+	
+	pros and cons:
+		pros: easy to understand; works well with high-dimensional data; often useful as a baseline comparision against more sophisticated methods
+		Cons: Asuumption that features are conditionally independent;
+		      Their confidence estimates for predictions are not very accurate. 
+
+
+
+Random Forests:
+	-An ensemble of trees, not just one.(One can be overfitting, but more will become stable and better generalization)
+	-Widely used, very good results on many problems.
+	Code: from slearn.ensemble import RandomForestClassifier
+	      from slearn.ensemble import RandomForestRegressior
+
+
+	Step:
+		Orginal dataset ==> randomized bootstrap copies ==> randomized feature splits ==> max_features ==> Ensemble Prediction
+
+	
+	Prediction Using random forests:
+		1. Make a prediction for evey tree in the forest
+		2. Combine individual predictions
+			- Regression: mean of individual tree predictions
+			- Classification:
+				1.Each tree gives probability for each class.
+				2.Probabilities averaged across trees.
+				3.Predict the class with highest probability.	
+	
+	Pros and Cons:
+		pros: Widely used, excellent prediction performance on many problems.
+		      Doesn't require careful normalization of features or extensive parameter tuning.
+		      Like decision trees, handles a mixture of feature types.
+		      Easily parallelized across multiple CPUs.
+		Cons: The resulting models are often difficult for humans to interpret.
+		      Like decision tree, not a good choice for very high-dimensional task compared to fast accurate linear models.
+
+
+	Parameters: 
+		n_estimators: number of trees to use in ensemble;
+		max_features: has a strong effect on performance. influences the diversity of trees in the forest.
+		max_depth: controls the depth of each tree.
+		n_jobs: how many cores to use in parallel during training.
